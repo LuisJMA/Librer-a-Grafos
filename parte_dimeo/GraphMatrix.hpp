@@ -13,5 +13,14 @@ namespace SimpleGraph {
         bool isDirected; 
  
         int getVertexIndex(const T& vertex) const; 
+
+        public: 
+        GraphMatrix(bool directed = false); 
+        void addVertex(const T& vertex); 
+        void addEdge(const T& source, const T& destination, double weight = 1.0); 
     };
+
 }
+
+#include "../src/GraphMatrix.cpp" 
+#endif
