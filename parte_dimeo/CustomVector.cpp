@@ -2,7 +2,7 @@
 #define CUSTOM_VECTOR_CPP
 
 // INCLUIR LA CABECERA AQUÍ PARA QUE EL COMPILADOR Y LA IDE RECONOZCAN LA CLASE
-#include "../include/CustomVector.hpp"
+#include "../parte_dimeo/CustomVector.hpp"
 
 namespace SimpleGraph {
 
