@@ -37,6 +37,55 @@ namespace SimpleGraph {
     }
 
     template <typename T>
+    bool GraphList<T>::hasEdge(const T& source, const T& destination) const {
+        int srcIdx = getVertexIndex(source);
+        int destIdx = getVertexIndex(destination);
+        if (srcIdx == -1 || destIdx == -1) return false;
+
+        for (int i = 0; i < adjList.at(srcIdx).size(); i++) {
+            if (adjList.at(srcIdx).at(i).destIndex == destIdx) return true;
+        }
+        return false;
+    }
+
+    template <typename T>
+    void GraphList<T>::removeEdge(const T& source, const T& destination) {
+        int srcIdx = getVertexIndex(source);
+        int destIdx = getVertexIndex(destination);
+        if (srcIdx == -1 || destIdx == -1) return;
+
+        for (int i = 0; i < adjList.at(srcIdx).size(); i++) {
+            if (adjList.at(srcIdx).at(i).destIndex == destIdx) {
+                adjList.at(srcIdx).removeAt(i);
+                break;
+            }
+        }
+
+        if (!isDirected) {
+            for (int i = 0; i < adjList.at(destIdx).size(); i++) {
+                if (adjList.at(destIdx).at(i).destIndex == srcIdx) {
+                    adjList.at(destIdx).removeAt(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    template <typename T>
+    void GraphList<T>::printGraph() const {
+        std::cout << "\n--- LISTA DE ADYACENCIA ---\n";
+        for (int i = 0; i < vertices.size(); i++) {
+            std::cout << vertices.at(i) << " -> ";
+            for (int j = 0; j < adjList.at(i).size(); j++) {
+                int destIdx = adjList.at(i).at(j).destIndex;
+                double w = adjList.at(i).at(j).weight;
+                std::cout << "[" << vertices.at(destIdx) << " | Peso: " << w << "] ";
+            }
+            std::cout << "\n";
+        }
+    }
+
+    template <typename T>
     CustomVector<T> GraphList<T>::BFS(const T& startVertex) {
         int startIdx = getVertexIndex(startVertex);
         if (startIdx == -1) throw std::invalid_argument("El vertice no existe.");
@@ -62,6 +111,32 @@ namespace SimpleGraph {
                 }
             }
         }
+        return result;
+    }
+
+    template <typename T>
+    void GraphList<T>::DFSHelper(int vertexIdx, CustomVector<bool>& visited, CustomVector<T>& result) {
+        visited.at(vertexIdx) = true;
+        result.push_back(vertices.at(vertexIdx));
+
+        for (int i = 0; i < adjList.at(vertexIdx).size(); i++) {
+            int neighborIdx = adjList.at(vertexIdx).at(i).destIndex;
+            if (!visited.at(neighborIdx)) {
+                DFSHelper(neighborIdx, visited, result);
+            }
+        }
+    }
+
+    template <typename T>
+    CustomVector<T> GraphList<T>::DFS(const T& startVertex) {
+        int startIdx = getVertexIndex(startVertex);
+        if (startIdx == -1) throw std::invalid_argument("El vertice no existe.");
+
+        CustomVector<T> result;
+        CustomVector<bool> visited;
+        visited.resize(vertices.size(), false);
+
+        DFSHelper(startIdx, visited, result);
         return result;
     }
 
@@ -111,9 +186,8 @@ namespace SimpleGraph {
         PathResult<T> result;
         result.totalDistance = dist.at(endIdx);
 
-        if (dist.at(endIdx) == INF) return result; // Sin camino
+        if (dist.at(endIdx) == INF) return result;
 
-        // Reconstruccion del camino en reversa
         CustomVector<T> reversePath;
         int curr = endIdx;
         while (curr != -1) {
@@ -121,7 +195,6 @@ namespace SimpleGraph {
             curr = parent.at(curr);
         }
 
-        // Invertir para retornar Orden Correcto
         for (int i = reversePath.size() - 1; i >= 0; i--) {
             result.path.push_back(reversePath.at(i));
         }
