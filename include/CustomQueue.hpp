@@ -18,9 +18,9 @@ namespace SimpleGraph {
     public:
         CustomQueue();
         ~CustomQueue();
-        CustomQueue(const CustomQueue& other);            // Constructor de copia
-        CustomQueue& operator=(const CustomQueue& other); // Operador de asignacion
-        
+        CustomQueue(const CustomQueue& other);
+        CustomQueue& operator=(const CustomQueue& other);
+
         void push(const T& data);
         void pop();
         T front() const;
