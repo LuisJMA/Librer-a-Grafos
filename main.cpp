@@ -10,6 +10,16 @@ void clearBuffer() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
+void cargarGrafoDePrueba(SimpleGraph::AbstractGraph<std::string>* graph) {
+    graph->addEdge("Caracas", "Maracay", 80.0);
+    graph->addEdge("Maracay", "Valencia", 50.0);
+    graph->addEdge("Caracas", "Valencia", 150.0);
+    graph->addEdge("Valencia", "Barquisimeto", 180.0);
+    graph->addEdge("Maracay", "Barquisimeto", 200.0);
+    graph->addEdge("Barquisimeto", "Maracaibo", 320.0);
+    std::cout << "\n[+] Grafo de prueba precargado exitosamente (6 ciudades y 6 conexiones).\n";
+}
+
 void menuPolimorfico(SimpleGraph::AbstractGraph<std::string>* graph, const std::string& nombreEstructura) {
     int option = 0;
 
@@ -25,7 +35,8 @@ void menuPolimorfico(SimpleGraph::AbstractGraph<std::string>* graph, const std::
         std::cout << "6. Ejecutar Recorrido BFS (Amplitud)\n";
         std::cout << "7. Ejecutar Recorrido DFS (Profundidad)\n";
         std::cout << "8. Camino Mas Corto (Dijkstra con Ruta)\n";
-        std::cout << "9. Volver al Menu Principal\n";
+        std::cout << "9. Precargar Grafo de Prueba (Auto-Poblar)\n";
+        std::cout << "10. Volver al Menu Principal\n";
         std::cout << "Opcion: ";
 
         if (!(std::cin >> option)) {
@@ -150,49 +161,17 @@ void menuPolimorfico(SimpleGraph::AbstractGraph<std::string>* graph, const std::
                 }
                 break;
             }
-            case 9:
+            case 9: {
+                cargarGrafoDePrueba(graph);
+                break;
+            }
+            case 10:
                 std::cout << "Regresando al menu principal...\n";
                 break;
             default:
                 std::cout << "[!] Opcion no valida.\n";
         }
-    } while (option != 9);
-}
-
-void cargarDemoAuto() {
-    std::cout << "\n==========================================\n";
-    std::cout << "   EJECUTANDO DEMOSTRACION AUTOMATICA     \n";
-    std::cout << "==========================================\n";
-
-    SimpleGraph::AbstractGraph<std::string>* demoGraph = new SimpleGraph::GraphList<std::string>(true);
-    
-    std::cout << "[+] Cargando red vial automatica...\n";
-    demoGraph->addEdge("Caracas", "Maracay", 80.0);
-    demoGraph->addEdge("Maracay", "Valencia", 50.0);
-    demoGraph->addEdge("Caracas", "Valencia", 150.0);
-    demoGraph->addEdge("Valencia", "Barquisimeto", 180.0);
-    demoGraph->addEdge("Maracay", "Barquisimeto", 200.0);
-
-    demoGraph->printGraph();
-
-    std::cout << "\n--> Recorrido BFS desde Caracas: ";
-    SimpleGraph::CustomVector<std::string> bfs = demoGraph->BFS("Caracas");
-    for (int i = 0; i < bfs.size(); i++) std::cout << bfs.at(i) << " ";
-    
-    std::cout << "\n--> Recorrido DFS desde Caracas: ";
-    SimpleGraph::CustomVector<std::string> dfs = demoGraph->DFS("Caracas");
-    for (int i = 0; i < dfs.size(); i++) std::cout << dfs.at(i) << " ";
-
-    std::cout << "\n\n--> Calculando Dijkstra de Caracas a Barquisimeto:\n";
-    SimpleGraph::PathResult<std::string> path = demoGraph->shortestPathDijkstra("Caracas", "Barquisimeto");
-    std::cout << "    Ruta: ";
-    for (int i = 0; i < path.path.size(); i++) {
-        std::cout << path.path.at(i) << (i + 1 < path.path.size() ? " -> " : "");
-    }
-    std::cout << "\n    Distancia: " << path.totalDistance << " km\n";
-
-    delete demoGraph;
-    std::cout << "\n[✓] Demo finalizada con exito.\n";
+    } while (option != 10);
 }
 
 int main() {
@@ -204,8 +183,7 @@ int main() {
         std::cout << "==========================================\n";
         std::cout << "1. Lista de Adyacencia (GraphList)\n";
         std::cout << "2. Matriz de Adyacencia (GraphMatrix)\n";
-        std::cout << "3. Ejecutar Demo Automatica (Prueba Rapida)\n";
-        std::cout << "4. Salir del Programa\n";
+        std::cout << "3. Salir del Programa\n";
         std::cout << "Seleccione una opcion: ";
 
         if (!(std::cin >> mainOption)) {
@@ -232,13 +210,11 @@ int main() {
 
             delete graph;
         } else if (mainOption == 3) {
-            cargarDemoAuto();
-        } else if (mainOption == 4) {
             std::cout << "\n¡Saliendo del programa!\n";
         } else {
             std::cout << "[!] Opcion no valida.\n";
         }
-    } while (mainOption != 4);
+    } while (mainOption != 3);
 
     return 0;
 }
