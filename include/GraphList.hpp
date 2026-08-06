@@ -7,11 +7,14 @@
 #include <limits>
 
 namespace SimpleGraph {
+    #ifndef PATH_RESULT_STRUCT
+    #define PATH_RESULT_STRUCT
     template <typename T>
     struct PathResult {
         CustomVector<T> path;
         double totalDistance;
     };
+    #endif
 
     template <typename T>
     class GraphList {
@@ -26,12 +29,18 @@ namespace SimpleGraph {
         bool isDirected;
 
         int getVertexIndex(const T& vertex) const;
+        void DFSHelper(int vertexIdx, CustomVector<bool>& visited, CustomVector<T>& result);
 
     public:
         GraphList(bool directed = false);
         void addVertex(const T& vertex);
         void addEdge(const T& source, const T& destination, double weight = 1.0);
+        void removeEdge(const T& source, const T& destination);
+        bool hasEdge(const T& source, const T& destination) const;
+        void printGraph() const;
+
         CustomVector<T> BFS(const T& startVertex);
+        CustomVector<T> DFS(const T& startVertex);
         PathResult<T> shortestPathDijkstra(const T& startVertex, const T& endVertex);
     };
 }
