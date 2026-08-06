@@ -66,20 +66,28 @@ namespace SimpleGraph {
     }
 
     template <typename T>
-    void GraphList<T>::shortestPathDijkstra(const T& startVertex) {
+    PathResult<T> GraphList<T>::shortestPathDijkstra(const T& startVertex, const T& endVertex) {
         int startIdx = getVertexIndex(startVertex);
-        if (startIdx == -1) throw std::invalid_argument("El vertice no existe.");
+        int endIdx = getVertexIndex(endVertex);
+
+        if (startIdx == -1 || endIdx == -1) {
+            throw std::invalid_argument("Vertice de origen o destino inexistente.");
+        }
 
         int n = vertices.size();
+        double INF = std::numeric_limits<double>::infinity();
         CustomVector<double> dist;
         CustomVector<bool> visited;
-        dist.resize(n, 999999.0);
+        CustomVector<int> parent;
+
+        dist.resize(n, INF);
         visited.resize(n, false);
+        parent.resize(n, -1);
 
         dist.at(startIdx) = 0.0;
 
         for (int i = 0; i < n - 1; i++) {
-            double minDist = 999999.0;
+            double minDist = INF;
             int minIdx = -1;
             for (int v = 0; v < n; v++) {
                 if (!visited.at(v) && dist.at(v) <= minDist) {
@@ -95,14 +103,30 @@ namespace SimpleGraph {
                 double weight = adjList.at(minIdx).at(j).weight;
                 if (!visited.at(neighbor) && dist.at(minIdx) + weight < dist.at(neighbor)) {
                     dist.at(neighbor) = dist.at(minIdx) + weight;
+                    parent.at(neighbor) = minIdx;
                 }
             }
         }
 
-        std::cout << "\nDistancias Dijkstra desde " << startVertex << ":\n";
-        for (int i = 0; i < n; i++) {
-            std::cout << vertices.at(i) << " -> " << dist.at(i) << "\n";
+        PathResult<T> result;
+        result.totalDistance = dist.at(endIdx);
+
+        if (dist.at(endIdx) == INF) return result; // Sin camino
+
+        // Reconstruccion del camino en reversa
+        CustomVector<T> reversePath;
+        int curr = endIdx;
+        while (curr != -1) {
+            reversePath.push_back(vertices.at(curr));
+            curr = parent.at(curr);
         }
+
+        // Invertir para retornar Orden Correcto
+        for (int i = reversePath.size() - 1; i >= 0; i--) {
+            result.path.push_back(reversePath.at(i));
+        }
+
+        return result;
     }
 }
 #endif
