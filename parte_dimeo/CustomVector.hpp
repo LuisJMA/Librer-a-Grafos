@@ -16,12 +16,13 @@ namespace SimpleGraph {
         ~CustomVector(); 
         CustomVector(const CustomVector& other); 
         CustomVector& operator=(const CustomVector& other); 
-         
+ 
         void push_back(const T& data); 
         T& at(int index); 
         const T& at(int index) const; 
         int size() const; 
         void resize(int new_size, T default_val); 
+        void removeAt(int index); 
     }; 
 } 
  
