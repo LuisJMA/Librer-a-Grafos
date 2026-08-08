@@ -1,7 +1,7 @@
 #ifndef CUSTOM_VECTOR_CPP 
 #define CUSTOM_VECTOR_CPP 
  
-#include "../parte_dimeo/CustomVector.hpp" 
+#include "../include/CustomVector.hpp" 
  
 namespace SimpleGraph { 
     template <typename T> 
