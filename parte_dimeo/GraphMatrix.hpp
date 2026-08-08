@@ -34,5 +34,5 @@ namespace SimpleGraph {
     }; 
 } 
  
-#include "../parte_dimeo/GraphMatrix.cpp" 
+#include "../src/GraphMatrix.cpp" 
 #endif
