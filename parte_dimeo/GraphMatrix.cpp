@@ -1,7 +1,7 @@
 #ifndef GRAPH_MATR IX_CPP
 #define GRAPH_MATRIX_CPP 
  
-#include "parte_dimeo/GraphMatrix.hpp" 
+#include "../include/GraphMatrix.hpp" 
  
 namespace SimpleGraph { 
     template <typename T> 
