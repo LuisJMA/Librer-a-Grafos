@@ -1,4 +1,4 @@
-#ifndef GRAPH_MATR IX_CPP
+[8/7/2026 10:42 PM] Luis Di Meo: #ifndef GRAPH_MATRIX_CPP 
 #define GRAPH_MATRIX_CPP 
  
 #include "../include/GraphMatrix.hpp" 
@@ -47,6 +47,47 @@ namespace SimpleGraph {
     } 
  
     template <typename T> 
+    bool GraphMatrix<T>::hasEdge(const T& source, const T& destination) const { 
+        int srcIdx = getVertexIndex(source); 
+        int destIdx = getVertexIndex(destination); 
+        if (srcIdx == -1 || destIdx == -1) return false; 
+        return matrix.at(srcIdx).at(destIdx) < std::numeric_limits<double>::infinity(); 
+    } 
+ 
+    template <typename T> 
+    void GraphMatrix<T>::removeEdge(const T& source, const T& destination) { 
+        int srcIdx = getVertexIndex(source); 
+        int destIdx = getVertexIndex(destination); 
+        if (srcIdx == -1 || destIdx == -1) return; 
+ 
+        double INF = std::numeric_limits<double>::infinity(); 
+        matrix.at(srcIdx).at(destIdx) = INF; 
+        if (!isDirected) { 
+            matrix.at(destIdx).at(srcIdx) = INF; 
+        } 
+    } 
+ 
+    template <typename T> 
+    void GraphMatrix<T>::printGraph() const { 
+        double INF = std::numeric_limits<double>::infinity(); 
+        std::cout << "\n--- MATRIZ DE ADYACENCIA ---\n\t"; 
+        for (int i = 0; i < vertices.size(); i++) { 
+            std::cout << vertices.at(i) << "\t"; 
+        } 
+        std::cout << "\n"; 
+ 
+        for (int i = 0; i < vertices.size(); i++) { 
+            std::cout << vertices.at(i) << "\t"; 
+            for (int j = 0; j < vertices.size(); j++) { 
+                double val = matrix.at(i).at(j); 
+                if (val == INF) std::cout << "INF\t"; 
+                else std::cout << val << "\t"; 
+            } 
+            std::cout << "\n"; 
+        } 
+    } 
+ 
+    template <typename T> 
     CustomVector<T> GraphMatrix<T>::BFS(const T& startVertex) { 
         int startIdx = getVertexIndex(startVertex); 
         if (startIdx == -1) throw std::invalid_argument("El vertice no existe."); 
@@ -72,6 +113,32 @@ namespace SimpleGraph {
                 } 
             } 
         } 
+        return result; 
+    } 
+ 
+    template <typename T> 
+    void GraphMatrix<T>::DFSHelper(int vertexIdx, CustomVector<bool>& visited, CustomVector<T>& result) {
+[8/7/2026 10:42 PM] Luis Di Meo: double INF = std::numeric_limits<double>::infinity(); 
+        visited.at(vertexIdx) = true; 
+        result.push_back(vertices.at(vertexIdx)); 
+ 
+        for (int j = 0; j < vertices.size(); j++) { 
+            if (matrix.at(vertexIdx).at(j) < INF && !visited.at(j)) { 
+                DFSHelper(j, visited, result); 
+            } 
+        } 
+    } 
+ 
+    template <typename T> 
+    CustomVector<T> GraphMatrix<T>::DFS(const T& startVertex) { 
+        int startIdx = getVertexIndex(startVertex); 
+        if (startIdx == -1) throw std::invalid_argument("El vertice no existe."); 
+ 
+        CustomVector<T> result; 
+        CustomVector<bool> visited; 
+        visited.resize(vertices.size(), false); 
+ 
+        DFSHelper(startIdx, visited, result); 
         return result; 
     } 
  
@@ -122,8 +189,9 @@ namespace SimpleGraph {
         PathResult<T> result; 
         result.totalDistance = dist.at(endIdx); 
  
-        if (dist.at(endIdx) == INF) return result;
-         CustomVector<T> reversePath; 
+        if (dist.at(endIdx) == INF) return result; 
+ 
+        CustomVector<T> reversePath; 
         int curr = endIdx; 
         while (curr != -1) { 
             reversePath.push_back(vertices.at(curr)); 
@@ -137,5 +205,4 @@ namespace SimpleGraph {
         return result; 
     } 
 } 
-
-#endif GRAPH_MATR IX_CPP
+#endif
