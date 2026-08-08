@@ -53,10 +53,3 @@ Cualquier instancia de `GraphList<T>` o `GraphMatrix<T>` dispone de las siguient
 
 Compilacion y ejecucion.
 g++ -std=c++11 main.cpp -o libreria_grafos
-
-Para ejecutar el programa interactivo:
-./libreria_grafos
-
-Autores.
-[Luis Di Meo. V31.883.627] 
-[Luis Mendez. V31.171.084]
