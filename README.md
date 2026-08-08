@@ -1,5 +1,5 @@
-# Librer-a-Grafos
-# Librer-a-Grafos
+# Libreria-Grafos
+
 Características Principales
 
 * **Cero Dependencias de STL Internas:** Implementación propia de estructuras dinámicas (`CustomVector` y `CustomQueue`).
